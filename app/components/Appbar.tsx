@@ -2,13 +2,13 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Appbar() {
-  const session = useSession();
+  const { data: session } = useSession();
 
   return (
     <div className="flex justify-between p-4">
       <div>MusicHub</div>
       <div>
-        {session?.data?.user ? (
+        {!session?.user ? (
           <button
             className="px-4 py-2 bg-blue-400 rounded-md"
             onClick={() => signIn()}
@@ -18,7 +18,10 @@ export default function Appbar() {
         ) : (
           <button
             className="px-4 py-2 bg-blue-400 rounded-md"
-            onClick={() => signOut()}
+            onClick={() => {
+              alert("hi there");
+              signOut();
+            }}
           >
             Log Out
           </button>
