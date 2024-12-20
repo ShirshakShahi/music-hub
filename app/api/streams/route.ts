@@ -2,6 +2,9 @@ import { prismaClient } from "@/app/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+//@ts-ignore
+import youtubesearchapi from "youtube-search-api";
+
 const CreateStreamSchema = z.object({
   creatorId: z.string(),
   url: z.string(),
@@ -40,12 +43,38 @@ export async function POST(req: NextRequest) {
 
     const extractedId = data.url.split("?v=")[1];
 
+    const videoResponse = await youtubesearchapi.GetVideoDetails(extractedId);
+
+    console.log(
+      "------------------------videoResponse Title-----------------------",
+      videoResponse.title
+    );
+    console.log(
+      "------------------------videoResponse Thumbnails-----------------------",
+      videoResponse.thumbnail.thumbnails
+    );
+
+    const thumbnails = videoResponse.thumbnail.thumbnails;
+
+    thumbnails.sort((a: { width: number }, b: { width: number }) =>
+      a.width < b.width ? -1 : 1
+    );
+
     const stream = await prismaClient.stream.create({
       data: {
         userId: data.creatorId,
         url: data.url,
         extractedId,
         type: "Youtube",
+        title: videoResponse.title ?? "Cant find video",
+        bigImg:
+          thumbnails[thumbnails.length - 1].url ??
+          "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg",
+        smallImg:
+          (thumbnails.length > 1
+            ? thumbnails[thumbnails.length - 2].url
+            : thumbnails[thumbnails.length - 1].url) ??
+          "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg",
       },
     });
 
