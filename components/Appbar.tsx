@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Appbar() {
@@ -9,14 +10,14 @@ export default function Appbar() {
       <div className="font-bold text-xl tracking-tight">MusicHub</div>
       <div>
         {!session?.user ? (
-          <button
+          <Button
             className="px-4 py-2 bg-green-600 rounded-md text-white"
             onClick={() => signIn()}
           >
             Log In
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
             className="px-4 py-2 bg-red-600 rounded-md text-white"
             onClick={() => {
               alert("hi there");
@@ -24,7 +25,7 @@ export default function Appbar() {
             }}
           >
             Log Out
-          </button>
+          </Button>
         )}
       </div>
     </div>
