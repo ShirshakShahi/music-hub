@@ -18,7 +18,8 @@ export default function Appbar() {
           </Button>
         ) : (
           <Button
-            className="px-4 py-2 bg-red-600 rounded-md text-white"
+          variant={"destructive"}
+            className="px-4 py-2 rounded-md text-white"
             onClick={() => {
               alert("hi there");
               signOut();
